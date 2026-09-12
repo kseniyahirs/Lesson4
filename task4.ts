@@ -1,23 +1,21 @@
-const str: string = "Order#1456; date=2026-01-26 09:07:05; amount=15.3";
-const parts = str.split("; ");
+const input: string = "Order#1456; date=2026-01-26 09:07:05; amount=15.3";
+const parts = input.split("; ");
 
-// 1. Извлекаем номер заказа
-const orderId = parts[0].replace("Order#", "");
+const orderId = parts[0]?.replace("Order#", "");
+const rawDate = parts[1]?.replace("date=", "");
+const price = parts[2]?.replace("amount=", "");
 
 // 2. Достаем дату
-const rawDate = parts[1].replace("date=", "");
-const d = new Date(rawDate.replace(" ", "T"));
-const day = String(d.getDate()).padStart(2, "0");
-const month = String(d.getMonth() + 1).padStart(2, "0");
-const year = d.getFullYear();
-const hours = String(d.getHours()).padStart(2, "0");
-const minutes = String(d.getMinutes()).padStart(2, "0");
-const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
+const year = rawDate?.substring(0, 4);
+const month = rawDate?.substring(5, 7);
+const day = rawDate?.substring(8, 10);
+const time = rawDate?.substring(11, 16);
+
+const formDate = `${day}/${month}/${year} ${time}`;
 
 // 3. Извлекаем и форматируем сумму
-const rawAmount = parts[2].replace("amount=", "");
-const amountNum = Math.ceil(rawAmount);
+const updPrice = Math.ceil(parseFloat(price || "0"));
 
 // 4. Результат
-const result = `Заказ № ${orderId} от ${formattedDate} на сумму ${amountNum} рублей`;
+const result = `Заказ № ${orderId} от ${formDate} на сумму ${updPrice} рублей`;
 console.log(result);
